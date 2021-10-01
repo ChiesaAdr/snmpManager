@@ -1,4 +1,4 @@
-module snmpManager
+module github.com/ChiesaAdr/snmpManager
 
 go 1.17
 
