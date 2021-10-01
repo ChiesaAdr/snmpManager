@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/gosnmp/gosnmp"
 	"os"
-	"snmpManager/resources"
+
+	resources "github.com/ChiesaAdr/snmpManager/resourcesSnmp"
+	"github.com/gosnmp/gosnmp"
 )
+
 //TODO: Test this with snmpMocker (https://git.intelbras.com.br/olt-software/snmpmocker) project
-func testTrapListener(){
+func testTrapListener() {
 	file := os.Stdout
 	conn := gosnmp.Default
 	conn.Target = "10.100.34.66"
