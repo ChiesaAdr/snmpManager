@@ -2,6 +2,7 @@ package resourcesSnmp
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -97,6 +98,8 @@ func MyTrapHandler(file *os.File) gosnmp.TrapHandlerFunc {
 
 // ConnectionV2cFactory TODO: I'm using const values for connection, like RETRIES and TIMEOUT. It's fine this way??
 func ConnectionV2cFactory(host string, port uint16, community string) *gosnmp.GoSNMP {
+	log.Printf("COISA LINDA")
+	fmt.Println("COISA LINDA")
 	conn := &gosnmp.GoSNMP{
 		Target:             host,
 		Port:               port,
