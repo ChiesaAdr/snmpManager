@@ -1,4 +1,4 @@
-module git.intelbras.com.br/olt-software/snmpmanager
+module github.com/ChiesaAdr/snmpManager
 
 go 1.17
 
