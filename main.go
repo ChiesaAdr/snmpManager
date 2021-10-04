@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"git.intelbras.com.br/olt-software/snmpmanager/resources"
-
+	"github.com/ChiesaAdr/snmpManager/resources"
 	"github.com/gosnmp/gosnmp"
 )
 
