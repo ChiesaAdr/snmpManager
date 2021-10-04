@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	resources "github.com/ChiesaAdr/snmpManager/resourcesSnmp"
+	"git.intelbras.com.br/olt-software/snmpmanager/resources"
 
 	"github.com/gosnmp/gosnmp"
 )
 
 //TODO: Test this with snmpMocker (https://git.intelbras.com.br/olt-software/snmpmocker) project
-func testTrapListener() {
+func TestTrapListener() {
 	file := os.Stdout
 	conn := gosnmp.Default
 	conn.Target = "10.100.34.66"
@@ -24,5 +24,5 @@ func testTrapListener() {
 	}
 }
 func main() {
-	testTrapListener()
+	TestTrapListener()
 }

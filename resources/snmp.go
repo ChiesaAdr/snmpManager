@@ -1,21 +1,19 @@
-package resourcesSnmp
+package resources
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/gosnmp/gosnmp"
 	"log"
 	"net"
 	"os"
 	"time"
-
-	"github.com/gosnmp/gosnmp"
 )
 
 const RETRIES = 3
 const TIMEOUT = 2
 const EXPONTIALTIMEOUT = true
 
-var Asn1BERErrors = []gosnmp.Asn1BER{gosnmp.Null, gosnmp.NoSuchObject, gosnmp.NoSuchInstance}
+var Asn1BERErrors = []gosnmp.Asn1BER {gosnmp.Null,gosnmp.NoSuchObject,gosnmp.NoSuchInstance}
 
 type SnmpData struct {
 	Value interface{}
@@ -24,9 +22,9 @@ type SnmpData struct {
 type SnmpResponse map[string]SnmpData
 
 func ParseSnmpPDU(dataUnit gosnmp.SnmpPDU, results SnmpResponse) {
-	name := dataUnit.Name[1:] //remove first '.'
+	name:=dataUnit.Name[1:] //remove first '.'
 	for _, berError := range Asn1BERErrors {
-		if dataUnit.Type == berError {
+		if dataUnit.Type == berError{
 			results[name] = SnmpData{Value: nil, Type: dataUnit.Type}
 			return
 		}
@@ -45,9 +43,9 @@ func DoSnmpGet(oids []string, conn *gosnmp.GoSNMP) []byte {
 		log.Printf("%v\n", err2)
 		return nil
 	}
-	results := make(SnmpResponse)
+	results  := make(SnmpResponse)
 	for _, variable := range result.Variables {
-		ParseSnmpPDU(variable, results)
+		ParseSnmpPDU(variable,results)
 	}
 	jsonResults, err := json.Marshal(results)
 	if err != nil {
@@ -60,7 +58,7 @@ func DoSnmpBulkWalk(oidRoot string, conn *gosnmp.GoSNMP) []byte {
 	results := make(SnmpResponse)
 
 	var handleSnmpPDU = gosnmp.WalkFunc(func(dataUnit gosnmp.SnmpPDU) error {
-		ParseSnmpPDU(dataUnit, results)
+		ParseSnmpPDU(dataUnit,results)
 		return nil
 	})
 
@@ -85,7 +83,7 @@ func MyTrapHandler(file *os.File) gosnmp.TrapHandlerFunc {
 		var results SnmpResponse
 
 		for _, v := range packet.Variables {
-			ParseSnmpPDU(v, results)
+			ParseSnmpPDU(v,results)
 		}
 
 		jsonResults, err := json.Marshal(results)
@@ -98,8 +96,6 @@ func MyTrapHandler(file *os.File) gosnmp.TrapHandlerFunc {
 
 // ConnectionV2cFactory TODO: I'm using const values for connection, like RETRIES and TIMEOUT. It's fine this way??
 func ConnectionV2cFactory(host string, port uint16, community string) *gosnmp.GoSNMP {
-	log.Printf("COISA LINDA")
-	fmt.Println("COISA LINDA")
 	conn := &gosnmp.GoSNMP{
 		Target:             host,
 		Port:               port,
@@ -122,8 +118,8 @@ func ConnectionV3Factory(host string, port uint16, user string) *gosnmp.GoSNMP {
 		Timeout:            time.Duration(TIMEOUT) + time.Second,
 		Retries:            RETRIES,
 		ExponentialTimeout: EXPONTIALTIMEOUT,
-		SecurityModel:      gosnmp.UserSecurityModel,
-		MsgFlags:           gosnmp.NoAuthNoPriv,
+		SecurityModel: 		gosnmp.UserSecurityModel,
+		MsgFlags:			gosnmp.NoAuthNoPriv,
 		SecurityParameters: &gosnmp.UsmSecurityParameters{
 			UserName: user,
 		},
@@ -135,7 +131,7 @@ func ConnectionV3Factory(host string, port uint16, user string) *gosnmp.GoSNMP {
 func ConnectionV3AuthFactory(host string, port uint16, user string,
 	authPass string, auth gosnmp.SnmpV3AuthProtocol) *gosnmp.GoSNMP {
 
-	conn := ConnectionV3Factory(host, port, user)
+	conn := ConnectionV3Factory(host,port,user)
 	conn.MsgFlags = gosnmp.AuthNoPriv
 	secParams := conn.SecurityParameters.(*gosnmp.UsmSecurityParameters)
 	secParams.AuthenticationProtocol = auth
@@ -145,7 +141,7 @@ func ConnectionV3AuthFactory(host string, port uint16, user string,
 func ConnectionV3AuthPrivFactory(host string, port uint16, user string, authPass string, auth gosnmp.SnmpV3AuthProtocol,
 	privPass string, privacy gosnmp.SnmpV3PrivProtocol) *gosnmp.GoSNMP {
 
-	conn := ConnectionV3Factory(host, port, user)
+	conn := ConnectionV3Factory(host,port,user)
 	conn.MsgFlags = gosnmp.AuthPriv
 	secParams := conn.SecurityParameters.(*gosnmp.UsmSecurityParameters)
 	secParams.PrivacyProtocol = privacy
@@ -155,3 +151,4 @@ func ConnectionV3AuthPrivFactory(host string, port uint16, user string, authPass
 	return conn
 
 }
+
